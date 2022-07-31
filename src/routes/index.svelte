@@ -3,12 +3,42 @@
   import Editor from '../components/Editor.svelte';
 
   const docText: EditorLanguageOptions = {
-    css: `.foo { display: block; }`,
-    html: `<div class="foo">foo</div>`,
+    css: `#pyscript-loading-label {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,.5);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: sans-serif;
+}
+
+py-script:not([id]) {
+  display: none;
+}
+`,
+
+    html: `Hello world!
+<div>
+  <p>This is the current date and time, as computed by Python:</p>
+  <py-script>
+    from datetime import datetime
+    now = datetime.now()
+    now.strftime("%m/%d/%Y, %H:%M:%S")
+  </py-script>
+</div>`,
+
     javascript: `console.log('hello');`,
   };
   let srcDoc = `
     <html>
+      <head>
+        <script defer src="https://pyscript.net/alpha/pyscript.js"><\/script>
+      </head>
       <body>${docText.html}</body>
       <style>${docText.css}<\/style>
       <script>${docText.javascript}<\/script>
@@ -21,6 +51,9 @@
 
     srcDoc = `
       <html>
+        <head>
+          <script defer src="https://pyscript.net/alpha/pyscript.js"><\/script>
+        </head>
         <body>${docText.html}</body>
         <style>${docText.css}<\/style>
         <script>${docText.javascript}<\/script>

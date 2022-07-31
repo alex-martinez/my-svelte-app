@@ -39,4 +39,4 @@
   });
 </script>
 
-<div class="h-full" bind:this={editorEl} />
+<div bind:this={editorEl} />
