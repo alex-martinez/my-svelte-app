@@ -1,10 +1,10 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import type { EditorLanguageOptions, EditorLanguageType } from 'src/models/editor-language-type';
-  import Editor from '../components/Editor.svelte';
+  import Editor from '../components/editor.svelte';
   import { css, html, javascript, head } from '../matplotlib';
 
-  const isMac = navigator.userAgent.indexOf("Mac") != -1;
-
+  let isMac: boolean;
   let docText: EditorLanguageOptions = {
     css,
     html,
@@ -12,6 +12,7 @@
     head,
   };
   let docTextCache = { ...docText };
+  let activeTab: EditorLanguageType = 'html';
 
   $: srcDoc = `
     <html>
@@ -21,7 +22,10 @@
       <script>${docText.javascript}<\/script>
     </html>
   `;
-  let activeTab: EditorLanguageType = 'html';
+
+  onMount(() => {
+    isMac = navigator.userAgent.indexOf("Mac") !== -1;
+  })
 
   function changeActiveTab(lang: EditorLanguageType) {
     activeTab = lang;
@@ -47,8 +51,9 @@
 
 <svelte:window on:keydown={handleKeydown}/>
 
-<div class="w-full h-screen flex">
-  <div class="w-1/2 bg-slate-800">
+<div class="w-full h-screen flex flex-col sm:flex-row">
+  <div class="h-1/2 sm:h-auto sm:w-1/2 bg-slate-800">
+    <!-- TODO: Separate tabs into own component -->
     <nav class="flex items-center bg-slate-900 overflow-x-auto">
       <button
         class="py-2 px-3 border-b-2 hover:border-b-indigo-400"
@@ -76,20 +81,20 @@
         class:bg-slate-800={activeTab === 'javascript'}
         class:border-b-transparent={activeTab !== 'javascript'}
         class:border-b-indigo-400={activeTab === 'javascript'}
-        on:click={() => changeActiveTab('javascript')}>JavaScript</button
+        on:click={() => changeActiveTab('javascript')}>JS</button
       >
 
-      <span class="ml-auto mr-2 text-xs">
+      <span class="hidden sm:block flex-none ml-auto mr-2 text-xs">
         {#if isMac}
-          <span>cmd</span>
+          cmd
         {:else}
-          <span>ctrl</span>
+          ctrl
         {/if}
-          <span>+ s</span>
+          + s
       </span>
 
       <button
-        class="rounded-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm px-2 py-0.5 mr-2"
+        class="flex-none rounded-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm px-2 py-0.5 mr-2 ml-auto sm:ml-0"
         on:click={onSaveAndRun}
       >Save & run</button>
     </nav>
@@ -111,7 +116,7 @@
     {/if}
   </div>
 
-  <div class="w-1/2 bg-white">
+  <div class="h-1/2 sm:h-auto sm:w-1/2 bg-white">
     <iframe
       {srcDoc}
       title="output"
