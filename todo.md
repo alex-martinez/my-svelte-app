@@ -1,0 +1,4 @@
+- [ ] Adjustable panes
+- [ ] File navigator?
+- [ ] Examples library
+- [ ] Prevent XSS attacks by encoding
