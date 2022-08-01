@@ -1,44 +1,44 @@
 <script lang="ts">
   import type { EditorLanguageOptions, EditorLanguageType } from 'src/models/editor-language-type';
   import Editor from '../components/Editor.svelte';
+  import { css, html, javascript } from '../matplotlib';
 
-  const docText: EditorLanguageOptions = {
-    css: `#pyscript-loading-label {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,.5);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: sans-serif;
-}
-
-py-script:not([id]) {
-  display: none;
-}
-`,
-
-    html: `Hello world!
-<div>
-  <p>This is the current date and time, as computed by Python:</p>
-  <py-script>
-    from datetime import datetime
-    now = datetime.now()
-    now.strftime("%m/%d/%Y, %H:%M:%S")
-  </py-script>
-</div>`,
-
-    javascript: `console.log('hello');`,
+  let docText: EditorLanguageOptions = {
+    css,
+    html,
+    javascript
   };
-  let srcDoc = `
+
+  $: srcDoc = `
     <html>
       <head>
         <script defer src="https://pyscript.net/alpha/pyscript.js"><\/script>
+        <style>
+          #pyscript-loading-label {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,.5);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: sans-serif;
+            text-align: center;
+          }
+
+          py-script:not([id]) {
+            display: none;
+          }
+        </style>
+
+        <py-env>
+          - matplotlib
+        </py-env>
       </head>
+
       <body>${docText.html}</body>
       <style>${docText.css}<\/style>
       <script>${docText.javascript}<\/script>
@@ -46,24 +46,25 @@ py-script:not([id]) {
   `;
   let activeTab: EditorLanguageType = 'html';
 
-  const handleChange = (val: string, lang: EditorLanguageType) => {
-    docText[lang] = val;
-
-    srcDoc = `
-      <html>
-        <head>
-          <script defer src="https://pyscript.net/alpha/pyscript.js"><\/script>
-        </head>
-        <body>${docText.html}</body>
-        <style>${docText.css}<\/style>
-        <script>${docText.javascript}<\/script>
-      </html>
-    `;
-  };
-
   function changeActiveTab(lang: EditorLanguageType) {
     activeTab = lang;
   }
+
+  const debounce = (func: any, delay: number) => {
+    let timerId: NodeJS.Timeout;
+    return () => {
+      clearTimeout(timerId);
+      timerId = setTimeout(func, delay);
+    };
+  };
+
+  const handleChange = (val: string, lang: EditorLanguageType) => {
+    docText = {
+      ...docText,
+      [lang]: val
+    };
+    console.log('DOCTEXT:', docText);
+  };
 </script>
 
 <div class="w-full h-screen flex">
@@ -93,15 +94,15 @@ py-script:not([id]) {
     </nav>
 
     {#if activeTab === 'html'}
-      <Editor doc={docText.html} lang={'html'} onChange={handleChange} />
+      <Editor doc={docText.html} lang={'html'} onChange={(val) => debounce(handleChange(val, 'html'), 250)} />
     {/if}
 
     {#if activeTab === 'javascript'}
-      <Editor doc={docText.javascript} lang={'javascript'} onChange={handleChange} />
+      <Editor doc={docText.javascript} lang={'javascript'} onChange={(val) => debounce(handleChange(val, 'javascript'), 250)} />
     {/if}
 
     {#if activeTab === 'css'}
-      <Editor doc={docText.css} lang={'css'} onChange={handleChange} />
+      <Editor doc={docText.css} lang={'css'} onChange={(val) => debounce(handleChange(val, 'css'), 250)} />
     {/if}
   </div>
 
