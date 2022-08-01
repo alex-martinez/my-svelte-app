@@ -3,6 +3,8 @@
   import Editor from '../components/Editor.svelte';
   import { css, html, javascript, head } from '../matplotlib';
 
+  const isMac = navigator.userAgent.indexOf("Mac") != -1;
+
   let docText: EditorLanguageOptions = {
     css,
     html,
@@ -29,14 +31,25 @@
     docTextCache[lang] = val;
   };
 
-  function onSave() {
+  function onSaveAndRun() {
     docText = docTextCache;
+  }
+
+  function handleKeydown(e: KeyboardEvent) {
+    const metaKey = isMac ? e.metaKey : e.ctrlKey;
+
+    if (metaKey && e.code === 'KeyS') {
+      e.preventDefault();
+      onSaveAndRun();
+    }
   }
 </script>
 
+<svelte:window on:keydown={handleKeydown}/>
+
 <div class="w-full h-screen flex">
   <div class="w-1/2 bg-slate-800">
-    <nav class="flex items-center bg-slate-900">
+    <nav class="flex items-center bg-slate-900 overflow-x-auto">
       <button
         class="py-2 px-3 border-b-2 hover:border-b-indigo-400"
         class:bg-slate-800={activeTab === 'html'}
@@ -66,9 +79,18 @@
         on:click={() => changeActiveTab('javascript')}>JavaScript</button
       >
 
+      <span class="ml-auto mr-2 text-xs">
+        {#if isMac}
+          <span>cmd</span>
+        {:else}
+          <span>ctrl</span>
+        {/if}
+          <span>+ s</span>
+      </span>
+
       <button
-        class="ml-auto rounded-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm px-2 py-1 mr-2"
-        on:click={onSave}
+        class="rounded-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm px-2 py-0.5 mr-2"
+        on:click={onSaveAndRun}
       >Save & run</button>
     </nav>
 
