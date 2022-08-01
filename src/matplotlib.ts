@@ -6,7 +6,32 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-}`;
+}
+
+#pyscript-loading-label {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,.5);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: sans-serif;
+  text-align: center;
+}
+
+py-script:not([id]) {
+  display: none;
+}
+`;
+
+export const head = `<script defer src="https://pyscript.net/alpha/pyscript.js"><\/script>
+<py-env>
+  - matplotlib
+</py-env>`;
 
 export const html = `<div id="mpl"></div>
 <py-script output="mpl">

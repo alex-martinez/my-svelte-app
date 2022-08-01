@@ -18,6 +18,7 @@
     css,
     html: xml,
     javascript,
+    head: xml,
   };
 
   onMount(() => {
@@ -39,4 +40,4 @@
   });
 </script>
 
-<div bind:this={editorEl} />
+<div class="overflow-y-auto" style="height: calc(100% - 42px)" bind:this={editorEl} />
