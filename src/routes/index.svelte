@@ -24,8 +24,8 @@
   `;
 
   onMount(() => {
-    isMac = navigator.userAgent.indexOf("Mac") !== -1;
-  })
+    isMac = navigator.userAgent.indexOf('Mac') !== -1;
+  });
 
   function changeActiveTab(lang: EditorLanguageType) {
     activeTab = lang;
@@ -33,7 +33,7 @@
 
   function handleChange(val: string, lang: EditorLanguageType) {
     docTextCache[lang] = val;
-  };
+  }
 
   function onSaveAndRun() {
     docText = docTextCache;
@@ -49,7 +49,7 @@
   }
 </script>
 
-<svelte:window on:keydown={handleKeydown}/>
+<svelte:window on:keydown={handleKeydown} />
 
 <div class="w-full h-screen flex flex-col sm:flex-row">
   <div class="h-1/2 sm:h-auto sm:w-1/2 bg-slate-800">
@@ -90,13 +90,13 @@
         {:else}
           ctrl
         {/if}
-          + s
+        + s
       </span>
 
       <button
         class="flex-none rounded-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm px-2 py-0.5 mr-2 ml-auto sm:ml-0"
-        on:click={onSaveAndRun}
-      >Save & run</button>
+        on:click={onSaveAndRun}>Save & run</button
+      >
     </nav>
 
     {#if activeTab === 'html'}
