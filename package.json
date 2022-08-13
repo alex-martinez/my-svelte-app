@@ -1,5 +1,5 @@
 {
-	"name": "my-svelte-app",
+	"name": "svelte-code-editor-app",
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "vite dev",

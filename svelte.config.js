@@ -1,7 +1,7 @@
 import adapter from '@sveltejs/adapter-static';
 import preprocess from 'svelte-preprocess';
 
-const dev = process.env.NODE_ENV === 'development';
+const isProd = process.env.NODE_ENV === 'production';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -22,7 +22,7 @@ const config = {
       assets: 'docs',
     }),
     paths: {
-      base: dev ? '' : '/svelte-code-editor',
+      base: isProd ? '/svelte-code-editor' : '',
     },
   },
 };
