@@ -5,14 +5,17 @@
   import { javascript } from '@codemirror/lang-javascript';
   import { xml } from '@codemirror/lang-xml';
   import { css } from '@codemirror/lang-css';
+  import { keymap } from '@codemirror/view';
+  import { indentWithTab } from '@codemirror/commands';
+
   import type { ViewUpdate } from '@codemirror/view';
   import type { EditorLanguageType } from '../models/editor-language-type';
 
   export let lang: EditorLanguageType;
-  export let doc: string;
   export let onChange: (docText: string, lang: EditorLanguageType) => void;
+  export let doc: string;
 
-  let editorEl;
+  let editorEl: HTMLElement;
 
   const syntax = {
     css,
@@ -26,6 +29,7 @@
       doc,
       extensions: [
         basicSetup,
+        keymap.of([indentWithTab]),
         oneDark,
         syntax[lang](),
         EditorView.lineWrapping,
