@@ -2,3 +2,4 @@
 - [ ] File navigator?
 - [ ] Examples library
 - [ ] Prevent XSS attacks by encoding
+- [ ] Change language between `py-script` tags
