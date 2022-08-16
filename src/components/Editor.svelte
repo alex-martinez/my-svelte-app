@@ -3,10 +3,11 @@
   import { basicSetup, EditorView } from 'codemirror';
   import { oneDark } from '@codemirror/theme-one-dark';
   import { javascript } from '@codemirror/lang-javascript';
-  import { xml } from '@codemirror/lang-xml';
+  import { htmlLanguage, html } from '@codemirror/lang-html';
   import { css } from '@codemirror/lang-css';
+  import { python } from '@codemirror/lang-python';
   import { keymap } from '@codemirror/view';
-  import { indentWithTab } from '@codemirror/commands';
+  import { defaultKeymap, indentWithTab } from '@codemirror/commands';
 
   import type { ViewUpdate } from '@codemirror/view';
   import type { EditorLanguageType } from '../models/editor-language-type';
@@ -18,10 +19,10 @@
   let editorEl: HTMLElement;
 
   const syntax = {
-    css,
-    html: xml,
-    javascript,
-    head: xml,
+    css: [css()],
+    html: [html({ autoCloseTags: true })],
+    head: [html({ autoCloseTags: true })],
+    javascript: [javascript()],
   };
 
   onMount(() => {
@@ -29,9 +30,10 @@
       doc,
       extensions: [
         basicSetup,
-        keymap.of([indentWithTab]),
+        keymap.of([...defaultKeymap, indentWithTab]),
         oneDark,
-        syntax[lang](),
+
+        ...syntax[lang],
         EditorView.lineWrapping,
         EditorView.updateListener.of((v: ViewUpdate) => {
           if (v.docChanged) {
